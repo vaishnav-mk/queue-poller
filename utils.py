@@ -68,7 +68,7 @@ def process_message(message, output_data, output_file, **kwargs):
 
 
 def read(
-    filepath="/home/wishee/work/sqs_new/queue_handler/monitoring_queue_config.json",
+    filepath="monitoring_queue_config.json",
     csp="aws",
 ):
     try:

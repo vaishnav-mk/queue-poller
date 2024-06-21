@@ -2,23 +2,14 @@ from contextlib import suppress
 import os
 import json
 import time
+from utils import read
 from azure.storage.queue import QueueServiceClient, QueueClient, QueueMessage
 from azure.core.exceptions import ResourceExistsError, ResourceNotFoundError
 
 
-def read(filepath="/home/wishee/work/sqs/queue_handler/monitoring_queue_config.json"):
-    try:
-        with open(filepath, "r") as file:
-            data = json.loads(file.read())
-            print(f"Loaded config data: {data}")
-            return data
-    except Exception as e:
-        print(f"Error reading file: {e}")
-        raise e
-
 def create_queue(queue_name: str) -> QueueClient:
     try:
-        connection_string = read()["azure"]["connection_string"]
+        connection_string = read(csp="azure")["connection_string"]
         client = QueueServiceClient.from_connection_string(connection_string)
         queue_client = client.get_queue_client(queue_name)
         queue_client.create_queue()
@@ -31,7 +22,7 @@ def create_queue(queue_name: str) -> QueueClient:
 
 def send_to_queue(data: dict, queue_name: str):
     try:
-        connection_string = read()["azure"]["connection_string"]
+        connection_string = read(csp="azure")["connection_string"]
         client = QueueServiceClient.from_connection_string(connection_string)
         print(f"Queue name: {queue_name}")
 
