@@ -114,7 +114,7 @@ if __name__ == "__main__":
             }
         }
         poller = threading.Thread(target=poll_azure_queue)
-    else:
+    elif cloud_provider == "aws":
         queue_url = create_aws_queue(queue_name)
         queue_data = {
             "aws": {

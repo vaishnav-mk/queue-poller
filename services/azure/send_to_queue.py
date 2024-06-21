@@ -4,7 +4,6 @@ import json
 import time
 from utils import read
 from azure.storage.queue import QueueServiceClient, QueueClient, QueueMessage
-from azure.core.exceptions import ResourceExistsError, ResourceNotFoundError
 
 
 def create_queue(queue_name: str) -> QueueClient:
@@ -33,14 +32,5 @@ def send_to_queue(data: dict, queue_name: str):
         queue_client.send_message(message_body)
         print(f"Message sent to queue: {queue_name}")
     except Exception as e:
-        if "QueueNotFound" or "queue is being deleted" in str(e):
-            with suppress(ResourceNotFoundError):
-                create_queue(queue_name)
-                send_to_queue(data, queue_name)
-                return "Queue created and message sent."
-        if "The specified queue does not exist" in str(e):
-            queue_client = client.get_queue_client(queue_name)
-            queue_client.send_message(message_body)
-            print(f"Message sent to queue: {queue_name}")
         print(f"Error sending message to queue: {e}")
         raise e
